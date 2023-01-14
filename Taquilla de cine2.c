@@ -69,7 +69,7 @@ void menu(){
 		printf(" 1. Cartelera\n");
 		printf(" 2. Dulceria\n");
 		printf(" 3. Compra de Boletos\n");
-		printf(" 4. Admin\n");
+		printf(" 4. Administracion\n");
 		printf(" 5. Salir\n\n");
 		printf(" Ingrese opcion: ");
 		scanf("%s",&op);
@@ -164,11 +164,31 @@ void menu(){
 
 	}
 	
-	if (op=='4') pago();
-	if (op=='5') transferencia();
-	if (op=='6') intereses();
-	if (op=='7') reporte();
-	if (op=='8')
+	if (op=='4') {
+			do{
+				printf("\n                               Administracion\n\n");
+				printf(" Administracion\n\n");
+				printf(" 1. Modificar Cartelera\n");
+				printf(" 2. Registro de Dulceria\n");
+				printf(" 3. Registro de boletos\n\n");
+				printf(" Ingrese opcion: ");
+				scanf("%s",&op2);
+				
+				if(op2!='1' && op2!='2' && op2!='3'){
+					printf("");
+					printf(" Error al ingresar valores. Presione una tecla para volver a ingresar..");
+				}
+			
+			}while(op2!='1' && op2!='2' && op2!='3');
+		
+		if (op2=='1') Modificar_Cartelera();   //AQU� SE LLAMA A LA FUNCION DEPOSITO
+		if (op2=='2') Registro_Dulces();   //AQU� SE LLAMA A LA FUNCION RETIRO
+		if (op2=='3')Registro_Dulces();
+		{
+			menu();
+		}
+
+	}
+	if (op=='5')
 		exit(0);
-	
 }
