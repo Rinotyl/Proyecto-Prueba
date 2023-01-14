@@ -6,9 +6,9 @@
 //PROTOTIPO DE LAS FUNCIONES
 void menu();
 void cambio(char a[]);
-void altaCliente();
-void altaCuenta();
-void consultaCliente();
+void PonerPelicula();
+//void altaCuenta();
+void ConsultaPelicula();
 void consultaC();
 void deposito();
 void retiro();
@@ -22,13 +22,11 @@ char fecha();
 
 //ESTRUCTURA CLIENTE Y SUS RESPECTIVAS VARIABLES
 typedef struct {
-	char idCliente[10];
-	char Nombre[50];
-	char Ciudad[25];
-	char Direccion[25];
-	char Edad[15];
-	char Telefono[20];
-}cliente;
+	char Nom_pelicula[25];
+	char Tipo[10];
+	char Horarios[5];
+	char Estado[5];
+}Pelicula;
 
 //ESTRUCTURA CUENTA Y SUS RESPECTIVAS VARIABLES
 typedef struct {
@@ -191,4 +189,88 @@ void menu(){
 	}
 	if (op=='5')
 		exit(0);
+}
+
+
+///REGISTRO DE PELICULAS
+void PonerPelicula(){
+	FILE *pa, *pa2;                                              //AQUI SE CREAN 2 VARIABLEs DE TIPO APUNTADOR CON EL NOMBRE PA Y PA2. ES DECIR, UNA VARIABLE PARA CADA ARCHIVO..
+	char r;                                                      //..LA CUEAL VA A CONTENER LA DIRECCION FISICA DE LOS ARCHIVOS UTILIZADOS
+	Pelicula nuevo, lista[50];                                      //AQU� SE CREAN DOS OBJETOS DE LA CLASES CLIENTE, UNO ES NUEVO Y EL OTRO ES UN ARREGLO LLAMADO LISTA..
+                                                   					//..EL OBJETO NUEVO NOS PERMITIR� ALMACENAR LOS DATOS EN LAS VARIABLES, PARA LUEGO GUARDARLOS EN EL ARCHIVO, M�S ABAJO SE INDICE LA LINEA DONDE SE GUARDAN.
+	if (((pa = fopen("Archivo Binario","a+b"))==NULL) || ((pa2 = fopen("Peliculas","a+b"))==NULL))         //FUNCION FOPEN: PERMITE CREAR Y/O ABRIR UN ARCHIVO, SE CREAN 2 ARCHIVOS, UNO BINARIO SOLO PARA SERA USADO PARA LAS BUSQUEDAS Y EL OTRO DE TEXTO , EL DE TEXTO PERMITE LEER LOS CARACTERES DEL TECLADO NORMAL
+	{ printf("No se puede abrir el archivo.\n");
+		return ;
+		}
+
+	int encontro=1,i,ultimo,res;
+
+	rewind(pa); 
+	i=0;
+	
+	while(!feof(pa))                                             //CON ESTE WHILE, SE VA A RECORRER TODO EL ARCHIVO, USAMOS LA FUNCION FEOF PARA RECORRER, LA CUAL RETORNA UN VALOR DISTINTO A CERO SI Y SOLO SI EL INDICADOR A LLEGADO AL FINAL DEL ARCHIVO
+	{ if(fread(&nuevo, sizeof(cliente), 1, pa)){                   //LA FUNCION FREAD, DEVUELVE EL NUMERO DE ELEMENTOS LEIDOS EN EL ARCHIVO, POR LO TANTO ESTE NUMERO NOS SIRVE PARA INDICARLE AL ARRAY CUANTAS POSICIONES TENDR�
+		lista[i]=nuevo;                                          //TODA LA INFORMACION ALMACENADA EN NUEVO SE LA GUARDARA EN EL ARRAY LISTA..
+		i++;}                                                    //.. ESTO SE LO HACE PARA LUEGO COMPARAR
+	}
+
+	fflush(stdin);
+	printf("\n                               Taquilla\n\n");
+	printf(" REGISTRO DE PELICULA\n\n");
+	printf(" Nombre de la Pelicula ");
+		res=i;
+		do{
+			gets(nueva.Nom_pelicula);
+			
+			//PROCESO DE BUSQUEDA DE INFORMACION DEL ID DEL CLIENTE
+			ultimo=res-1;
+			i=0;
+			encontro=1;
+			while (i<=ultimo && encontro){
+				if (strcmp(lista[i].Nom_pelicula,nuevo.Nom_pelicula)==0) encontro=0;              //COMPARA EL NOMBRE INGRESADO POR TECLADO , CON LOS NOMBRES QUE ESTAN EN EL ARREGLO LISTA
+				else i++;
+			}
+			
+			//SI SE ENCUENTRA EL NOMBRE, SE MUESTRA MENSAJE DE QUE YA EXISTE Y SE DEBE INGRESAR OTRO
+			if (i<=ultimo){
+				printf("\n Nombre de la pelicula ya registrado!\n Presione una tecla para ingresar otra pelicula..");
+				getch();
+				system("cls");
+				printf("\n                               Taquilla\n\n");
+				printf(" REGISTRO DE LA PELICULA\n\n");
+				printf(" Nombre de la Pelicula ");
+			}
+		}
+		while(i<=ultimo);
+
+	//IMPRIME POR PANTALLA Y SE INGRESAN LOS DATOS
+	
+	printf(" Tipo(Normal // 3D)"); gets(nuevo.Tipo);
+	printf(" Horario"); gets(nuevo.Horarios);
+	printf(" Estado de la sala"); gets(nuevo.Estado);
+
+	// CON ESTE DO WHILE SE CONFIRMA SI SE QUIERE REGISTRAR AL CLIENTE, SE DEBE PRESIONAR S PARA CONFIRMAR , N PARA CANCELAR
+	do{
+		printf("\n");
+		printf(" Confirmar Registro de la pelicula: Si[s] / No [n]: "); 
+		r=getch();
+	}while(r!='S' && r!='s' && r!='N' && r!='n');
+	
+	
+	if (r=='s' || r=='S') {
+		fwrite(&nuevo, sizeof(Nom_pelicula),1,pa);                                                            //AQUI SE GUARDAN LOS DATOS EN EL ARCHIVO LLAMADO ARCHIVO BINARIO , LA FUNCI�N FWRITE PERMITE GUARDAR INFORMACI�N CONTENIDA EN LAS VARIABLES A UN ARCHIVO DESTINO
+		fprintf(pa2, "%s %s %s %s %s %s\n", nuevo.Nom_pelicula, nuevo.Tipo, nuevo.Horarios, nuevo.Estado );       //AQUI SE GUARDAN LOS DATOS EN EL ARCHIVO DE TEXTO LLAMADO CLIENTES, LA FUNCION FPRINTF AL IGUAL QUE LA FWRITE GUARDA INFORMACION EN LAS VARIABLES
+		printf("\n");
+		printf("\n 	Pelicula Registrada Correctamente\n"); 
+		printf(" Presione una tecla para volver al menu principal..");
+	}
+	
+	else {
+		printf("\n\n Pelicula NO Registrada\n"); 
+		printf(" Presione una tecla para volver al menu principal..");
+	}
+	
+	fclose(pa);
+	fclose(pa2);
+	menu();
 }
